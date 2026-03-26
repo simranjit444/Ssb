@@ -96,7 +96,7 @@ const stationChecklists: Record<string, Array<{
 };
 
 export default function Checklist() {
-  const { currentStation, scannedItemId, currentUser, setScannedItemId } = useApp();
+  const { currentStation, selectedCategory, scannedItemId, currentUser, setScannedItemId, addInspection } = useApp();
   const navigate = useNavigate();
   const [checklist, setChecklist] = useState<Array<{
     id: string;
@@ -141,7 +141,7 @@ export default function Checklist() {
 
   // Handle barcode scan - different logic for first vs second scan
   useEffect(() => {
-    if (scannedCode) {
+    if (scannedCode && currentStation && scannedItemId && currentUser) {
       if (isFirstScan) {
         // STEP 1: First scan - Load checklist and wait for inspection
         setCurrentItemBarcode(scannedCode);
@@ -149,8 +149,21 @@ export default function Checklist() {
         setScannedCode(null);
         setScanning(true); // Start scanning for second barcode (confirmation)
       } else {
-        // STEP 2: Second scan - Auto-submit after 3 seconds and redirect to scanner
+        // STEP 2: Second scan - Record OK inspection and redirect to scanner
         const timer = setTimeout(() => {
+          // Record the inspection as OK
+          const inspection = {
+            itemId: scannedItemId,
+            stationId: currentStation.id,
+            stationName: currentStation.name,
+            timestamp: new Date().toISOString(),
+            inspector: currentUser.name,
+            status: 'ok' as const,
+            checklist: []
+          };
+          
+          addInspection(scannedItemId, inspection);
+          
           // Show success flash
           setShowSuccessFlash(true);
           
@@ -163,7 +176,7 @@ export default function Checklist() {
         return () => clearTimeout(timer);
       }
     }
-  }, [scannedCode, isFirstScan, navigate]);
+  }, [scannedCode, isFirstScan, currentStation, scannedItemId, currentUser, addInspection, navigate]);
 
   if (!currentStation || !scannedItemId) {
     return null;
@@ -174,6 +187,21 @@ export default function Checklist() {
   };
 
   const handleNGSubmit = (data: any) => {
+    if (currentStation && scannedItemId && currentUser) {
+      // Record the inspection as NG
+      const inspection = {
+        itemId: scannedItemId,
+        stationId: currentStation.id,
+        stationName: currentStation.name,
+        timestamp: new Date().toISOString(),
+        inspector: currentUser.name,
+        status: 'ng' as const,
+        checklist: []
+      };
+      
+      addInspection(scannedItemId, inspection);
+    }
+    
     setNgModalOpen(false);
     // After NG submission, redirect to scanner
     setShowSuccessFlash(true);
@@ -195,6 +223,19 @@ export default function Checklist() {
       hour: '2-digit',
       minute: '2-digit'
     }).format(date);
+  };
+
+  const getCategoryName = () => {
+    switch(selectedCategory) {
+      case 'deco-panel-non-sensi':
+        return 'Deco Panel Non Sensi';
+      case 'deco-panel-sensi':
+        return 'Deco Panel Sensi';
+      case 'assembly-parts':
+        return 'Assembly Parts';
+      default:
+        return 'Category';
+    }
   };
 
   return (
@@ -237,6 +278,19 @@ export default function Checklist() {
           </div>
 
           <div className="bg-white/10 rounded-xl p-4 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-blue-200">Category:</span>
+              <span>{getCategoryName()}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-blue-200">Part Number:</span>
+              <span>3P790748-1</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-blue-200">Model No.:</span>
+              <span>BYCQ125EAF6</span>
+            </div>
+            <div className="border-t border-white/20 my-2"></div>
             <div className="flex justify-between text-sm">
               <span className="text-blue-200">Station:</span>
               <span>{currentStation.code} - {currentStation.name}</span>

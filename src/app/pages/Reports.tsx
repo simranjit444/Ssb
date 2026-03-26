@@ -144,8 +144,8 @@ export default function Reports() {
                 <Tooltip
                   contentStyle={{ borderRadius: '0.75rem', border: '1px solid #e5e7eb' }}
                 />
-                <Bar dataKey="inspected" fill="#1E3A5F" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="target" fill="#22C55E" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="inspected" fill="#1E3A5F" radius={[8, 8, 0, 0]} name="Inspected" />
+                <Bar dataKey="target" fill="#22C55E" radius={[8, 8, 0, 0]} name="Target" />
               </BarChart>
             </ResponsiveContainer>
           </div>

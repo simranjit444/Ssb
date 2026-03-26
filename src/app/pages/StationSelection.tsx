@@ -11,7 +11,7 @@ const stationIcons: Record<string, React.ReactNode> = {
 };
 
 export default function StationSelection() {
-  const { currentUser, setCurrentStation, logout } = useApp();
+  const { currentUser, selectedCategory, setCurrentStation, logout } = useApp();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -34,20 +34,58 @@ export default function StationSelection() {
     navigate('/');
   };
 
+  const getCategoryName = () => {
+    switch(selectedCategory) {
+      case 'deco-panel-non-sensi':
+        return 'Deco Panel Non Sensi';
+      case 'deco-panel-sensi':
+        return 'Deco Panel Sensi';
+      case 'assembly-parts':
+        return 'Assembly Parts';
+      default:
+        return 'Category';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-[#1E3A5F] text-white p-6 shadow-md">
-        <div className="flex items-center justify-between max-w-2xl mx-auto">
-          <div>
-            <h1 className="text-2xl mb-1">Select Station</h1>
-            <p className="text-blue-200 text-sm">Welcome, {currentUser.name}</p>
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/category')}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <ArrowRight className="w-6 h-6 rotate-180" />
+              </button>
+              <div>
+                <h1 className="text-2xl mb-1">Select Station</h1>
+                <p className="text-blue-200 text-sm">Welcome, {currentUser.name}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="p-3 hover:bg-white/10 rounded-xl transition-colors"
+            >
+              <LogOut className="w-6 h-6" />
+            </button>
           </div>
-          <button
-            onClick={handleLogout}
-            className="p-3 hover:bg-white/10 rounded-xl transition-colors"
-          >
-            <LogOut className="w-6 h-6" />
-          </button>
+
+          <div className="bg-white/10 rounded-xl p-4">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-blue-200">Category:</span>
+              <span>{getCategoryName()}</span>
+            </div>
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-blue-200">Part Number:</span>
+              <span>3P790748-1</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-blue-200">Model No.:</span>
+              <span>BYCQ125EAF6</span>
+            </div>
+          </div>
         </div>
       </div>
 

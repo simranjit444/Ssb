@@ -17,10 +17,10 @@ const ngFrequencyData = [
 ];
 
 const stationLoadData = [
-  { name: 'ST01', value: 45 },
-  { name: 'ST02', value: 38 },
-  { name: 'ST03', value: 52 },
-  { name: 'ST04', value: 41 },
+  { name: 'ST01', value: 45, id: 'load-st01' },
+  { name: 'ST02', value: 38, id: 'load-st02' },
+  { name: 'ST03', value: 52, id: 'load-st03' },
+  { name: 'ST04', value: 41, id: 'load-st04' },
 ];
 
 const COLORS = ['#1E3A5F', '#22C55E', '#EF4444', '#F59E0B'];
@@ -104,7 +104,7 @@ export default function Dashboard() {
                   dataKey="value"
                 >
                   {stationLoadData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={entry.id} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip

@@ -15,7 +15,7 @@ export default function Login() {
     setError('');
 
     if (login(userId, password)) {
-      navigate('/stations');
+      navigate('/category');
     } else {
       setError('Invalid credentials. Try user1, user2, or supervisor');
     }
@@ -31,7 +31,7 @@ export default function Login() {
   const handleQuickAccessMobile = () => {
     // Quick access for demo - login as user1
     if (login('user1', 'demo')) {
-      navigate('/stations');
+      navigate('/category');
     }
   };
 

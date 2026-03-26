@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import Login from './pages/Login';
+import CategorySelection from './pages/CategorySelection';
 import StationSelection from './pages/StationSelection';
 import BarcodeScanner from './pages/BarcodeScanner';
 import Checklist from './pages/Checklist';
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Login />,
+  },
+  {
+    path: '/category',
+    element: <CategorySelection />,
   },
   {
     path: '/stations',
